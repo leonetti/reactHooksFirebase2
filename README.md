@@ -1,5 +1,12 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+Will need environment variables to get up and running with Firebase
+
+Uses Firebase for Authentication
+Uses React Router for routing and protecting routes
+Uses Material UI Core/Icons for styling
+
+
 ## Available Scripts
 
 In the project directory, you can run:
