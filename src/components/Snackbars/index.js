@@ -82,9 +82,9 @@ function SnackbarWrapper(props) {
 
 SnackbarWrapper.propTypes = {
   classes: PropTypes.shape({
-    message: PropTypes.shape({}).isRequired,
-    icon: PropTypes.shape({}).isRequired,
-    closeIcon: PropTypes.shape({}).isRequired,
+    message: PropTypes.string.isRequired,
+    icon: PropTypes.string.isRequired,
+    closeIcon: PropTypes.string.isRequired,
   }).isRequired,
   type: PropTypes.string,
   message: PropTypes.string.isRequired,

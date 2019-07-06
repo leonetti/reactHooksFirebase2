@@ -100,10 +100,10 @@ function HomePage(props) {
 
 HomePage.propTypes = {
   classes: PropTypes.shape({
-    main: PropTypes.shape({}).isRequired,
-    paper: PropTypes.shape({}).isRequired,
-    avatar: PropTypes.shape({}).isRequired,
-    submit: PropTypes.shape({}).isRequired,
+    main: PropTypes.string.isRequired,
+    paper: PropTypes.string.isRequired,
+    avatar: PropTypes.string.isRequired,
+    submit: PropTypes.string.isRequired,
   }).isRequired,
   history: PropTypes.shape({
     replace: PropTypes.func.isRequired,
