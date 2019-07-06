@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { Typography, Paper, Avatar, Button, FormControl, Input, InputLabel } from '@material-ui/core'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import withStyles from '@material-ui/core/styles/withStyles'
-import { Link, withRouter } from 'react-router-dom'
+/* eslint-disable react/jsx-filename-extension */
+import React, { useState, useEffect } from 'react';
+import {
+  Typography, Paper, Avatar, Button, FormControl, Input, InputLabel,
+} from '@material-ui/core';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import withStyles from '@material-ui/core/styles/withStyles';
+import { Link, withRouter } from 'react-router-dom';
 import queryString from 'query-string';
+import PropTypes from 'prop-types';
 
 import * as ROUTES from '../../constants/routes';
 import ERRORS from '../../constants/errors';
@@ -16,7 +20,7 @@ const styles = theme => ({
     display: 'block',
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
-    [theme.breakpoints.up(400 + theme.spacing(6))] : {
+    [theme.breakpoints.up(400 + theme.spacing(6))]: {
       width: 400,
       marginLeft: 'auto',
       marginRight: 'auto',
@@ -40,36 +44,36 @@ const styles = theme => ({
   submit: {
     marginTop: theme.spacing(3),
   },
-})
+});
 
 function Login(props) {
-  const { classes } = props;
+  const { classes, history } = props;
 
   const firebase = useFirebase();
   const user = firebase.getCurrentUser();
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [errorOpen, setErrorOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [errorType, setErrorType] = useState('');
-  const [warningOpen, setWarningOpen] = useState(false)
-  const [warningMessage, setWarningMessage] = useState('')
+  const [warningOpen, setWarningOpen] = useState(false);
+  const [warningMessage, setWarningMessage] = useState('');
 
   const isInvalid = password === '' || email === '';
 
 
   useEffect(() => {
-    const searchUrl = props.history.location.search
+    const searchUrl = history.location.search;
     const searchParams = queryString.parse(searchUrl);
-    if(searchParams.from_dashboard) {
+    if (searchParams.from_dashboard) {
       setWarningOpen(true);
       setWarningMessage('Please Login Again');
     }
-  }, [props.history.location.search])
+  }, [history.location.search]);
 
-  if(user) {
-    props.history.replace(ROUTES.DASHBOARD);
+  if (user) {
+    history.replace(ROUTES.DASHBOARD);
     return null;
   }
 
@@ -96,17 +100,16 @@ function Login(props) {
 
   async function login() {
     resetErrors();
-		try {
-			await firebase.doSignInWithEmailAndPassword(email, password)
-			props.history.replace(ROUTES.DASHBOARD)
-		} catch(error) {
-      console.log(error);
+    try {
+      await firebase.doSignInWithEmailAndPassword(email, password);
+      history.replace(ROUTES.DASHBOARD);
+    } catch (error) {
       setErrorOpen(true);
       const formattedError = ERRORS(error);
       setErrorMessage(formattedError.message);
-      setErrorType(formattedError.type)
-		}
-	}
+      setErrorType(formattedError.type);
+    }
+  }
 
   return (
     <main className={classes.main}>
@@ -191,7 +194,23 @@ function Login(props) {
         handleClose={onWarningClose}
       />
     </main>
-  )
+  );
 }
+
+Login.propTypes = {
+  classes: PropTypes.shape({
+    main: PropTypes.shape({}).isRequired,
+    paper: PropTypes.shape({}).isRequired,
+    avatar: PropTypes.shape({}).isRequired,
+    form: PropTypes.shape({}).isRequired,
+    submit: PropTypes.shape({}).isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    location: PropTypes.shape({
+      search: PropTypes.string,
+    }).isRequired,
+    replace: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default withRouter(withStyles(styles)(Login));

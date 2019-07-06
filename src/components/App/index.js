@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react'
-import './styles.scss'
-import HomePage from '../HomePage'
-import Login from '../Login'
-import Register from '../Register'
-import Dashboard from '../Dashboard'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+/* eslint-disable react/jsx-filename-extension */
+import React, { useState, useEffect } from 'react';
+import './styles.scss';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { CssBaseline, CircularProgress } from '@material-ui/core';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import HomePage from '../HomePage';
+import Login from '../Login';
+import Register from '../Register';
+import Dashboard from '../Dashboard';
 // Resets CSS across browswers
-import { CssBaseline, CircularProgress } from '@material-ui/core'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 import * as ROUTES from '../../constants/routes';
 import { useFirebase } from '../../Firebase';
@@ -19,9 +20,9 @@ export default function App() {
   const firebase = useFirebase();
 
   useEffect(() => {
-    firebase.isInitialized().then(val => {
+    firebase.isInitialized().then((val) => {
       setFirebaseInitialized(val);
-    })
+    });
   }, [firebase]);
 
   return firebaseInitialized !== false ? (
@@ -36,5 +37,5 @@ export default function App() {
         </Switch>
       </Router>
     </MuiThemeProvider>
-  ) : <div id="pageLoader"><CircularProgress /></div>
+  ) : <div id="pageLoader"><CircularProgress /></div>;
 }

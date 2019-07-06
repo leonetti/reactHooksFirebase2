@@ -1,8 +1,12 @@
-import React, { useState } from 'react'
-import { Typography, Paper, Avatar, Button, FormControl, Input, InputLabel } from '@material-ui/core'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import withStyles from '@material-ui/core/styles/withStyles'
-import { Link, withRouter } from 'react-router-dom'
+/* eslint-disable react/jsx-filename-extension */
+import React, { useState } from 'react';
+import {
+  Typography, Paper, Avatar, Button, FormControl, Input, InputLabel,
+} from '@material-ui/core';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import withStyles from '@material-ui/core/styles/withStyles';
+import { Link, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import * as ROUTES from '../../constants/routes';
 import ERRORS from '../../constants/errors';
@@ -15,7 +19,7 @@ const styles = theme => ({
     display: 'block',
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
-    [theme.breakpoints.up(400 + theme.spacing(6))] : {
+    [theme.breakpoints.up(400 + theme.spacing(6))]: {
       width: 400,
       marginLeft: 'auto',
       marginRight: 'auto',
@@ -39,18 +43,18 @@ const styles = theme => ({
   submit: {
     marginTop: theme.spacing(3),
   },
-})
+});
 
 function Register(props) {
-  const { classes } = props;
+  const { classes, history } = props;
 
-  const [name, setName] = useState('')
-	const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [passwordConfirm, setPasswordConfirm] = useState('')
-  const [quote, setQuote] = useState('')
-  const [errorOpen, setErrorOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [quote, setQuote] = useState('');
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [errorType, setErrorType] = useState('');
 
   const isInvalid = (password === '')
@@ -63,8 +67,8 @@ function Register(props) {
   const firebase = useFirebase();
   const user = firebase.getCurrentUser();
 
-  if(user) {
-    props.history.replace(ROUTES.DASHBOARD);
+  if (user) {
+    history.replace(ROUTES.DASHBOARD);
     return null;
   }
 
@@ -90,15 +94,14 @@ function Register(props) {
       return;
     }
     try {
-      await firebase.doCreateUserWithEmailAndPassword(name, email, password)
+      await firebase.doCreateUserWithEmailAndPassword(name, email, password);
       await firebase.addQuote(quote);
-      props.history.replace(ROUTES.DASHBOARD);
-    } catch(error) {
-      console.log(error);
+      history.replace(ROUTES.DASHBOARD);
+    } catch (error) {
       setErrorOpen(true);
       const formattedError = ERRORS(error);
       setErrorMessage(formattedError.message);
-      setErrorType(formattedError.type)
+      setErrorType(formattedError.type);
     }
   }
 
@@ -110,8 +113,8 @@ function Register(props) {
         </Avatar>
         <Typography component="h1" variant="h5">
           Register Account
-              </Typography>
-        <form className={classes.form} onSubmit={e => e.preventDefault() && false }>
+        </Typography>
+        <form className={classes.form} onSubmit={e => e.preventDefault() && false}>
           <FormControl
             margin="normal"
             required
@@ -125,9 +128,9 @@ function Register(props) {
             required
             fullWidth
             error={errorType === 'email'}
-            >
+          >
             <InputLabel htmlFor="email">Email Address</InputLabel>
-            <Input id="email" type="text" name="email" autoComplete="off" value={email} onChange={e => setEmail(e.target.value)}  />
+            <Input id="email" type="text" name="email" autoComplete="off" value={email} onChange={e => setEmail(e.target.value)} />
           </FormControl>
           <FormControl
             margin="normal"
@@ -136,7 +139,7 @@ function Register(props) {
             error={errorType === 'password'}
           >
             <InputLabel htmlFor="password">Password</InputLabel>
-            <Input name="password" type="password" id="password" autoComplete="off" value={password} onChange={e => setPassword(e.target.value)}  />
+            <Input name="password" type="password" id="password" autoComplete="off" value={password} onChange={e => setPassword(e.target.value)} />
           </FormControl>
           <FormControl
             margin="normal"
@@ -145,11 +148,11 @@ function Register(props) {
             error={errorType === 'password'}
           >
             <InputLabel htmlFor="passwordConfirm">Confirm Password</InputLabel>
-            <Input name="passwordConfirm" type="password" id="passwordConfirm" autoComplete="off" value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)}  />
+            <Input name="passwordConfirm" type="password" id="passwordConfirm" autoComplete="off" value={passwordConfirm} onChange={e => setPasswordConfirm(e.target.value)} />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
             <InputLabel htmlFor="quote">Your Favorite Quote</InputLabel>
-            <Input name="quote" type="text" id="quote" autoComplete="off" value={quote} onChange={e => setQuote(e.target.value)}  />
+            <Input name="quote" type="text" id="quote" autoComplete="off" value={quote} onChange={e => setQuote(e.target.value)} />
           </FormControl>
 
           <Button
@@ -159,7 +162,8 @@ function Register(props) {
             color="primary"
             onClick={onRegister}
             disabled={isInvalid}
-            className={classes.submit}>
+            className={classes.submit}
+          >
             Register
           </Button>
 
@@ -170,7 +174,8 @@ function Register(props) {
             color="secondary"
             component={Link}
             to={ROUTES.LOGIN}
-            className={classes.submit}>
+            className={classes.submit}
+          >
             Go back to Login
           </Button>
         </form>
@@ -182,7 +187,20 @@ function Register(props) {
         handleClose={onClose}
       />
     </main>
-  )
+  );
 }
+
+Register.propTypes = {
+  classes: PropTypes.shape({
+    main: PropTypes.shape({}).isRequired,
+    paper: PropTypes.shape({}).isRequired,
+    avatar: PropTypes.shape({}).isRequired,
+    form: PropTypes.shape({}).isRequired,
+    submit: PropTypes.shape({}).isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    replace: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default withRouter(withStyles(styles)(Register));

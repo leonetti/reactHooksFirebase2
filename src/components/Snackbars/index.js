@@ -1,5 +1,7 @@
-import React from 'react'
-import withStyles from '@material-ui/core/styles/withStyles'
+/* eslint-disable react/jsx-filename-extension */
+import React from 'react';
+import withStyles from '@material-ui/core/styles/withStyles';
+import PropTypes from 'prop-types';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
@@ -30,7 +32,7 @@ const styles = theme => ({
   },
   closeIcon: {
     fontSize: 20,
-  }
+  },
 });
 
 const iconFromType = (type) => {
@@ -42,38 +44,56 @@ const iconFromType = (type) => {
     case 'warning':
       return WarningIcon;
     default:
-        break;
+      return '';
   }
-}
+};
 
 function SnackbarWrapper(props) {
-  const { classes, type, message, isOpen, handleClose } = props;
+  const {
+    classes, type, message, isOpen, handleClose,
+  } = props;
   const Icon = iconFromType(type);
   return (
     <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-        open={isOpen}
-        autoHideDuration={6000}
-      >
-        <SnackbarContent
-          className={classes[type]}
-          message={
-            <span className={classes.message}>
-              <Icon className={classes.icon} />
-              {message}
-            </span>
-          }
-          action={[
-            <IconButton key="close" aria-label="Close" color="inherit" onClick={handleClose}>
-              <CloseIcon className={classes.closeIcon} />
-            </IconButton>,
-          ]}
-        />
-      </Snackbar>
-  )
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'center',
+      }}
+      open={isOpen}
+      autoHideDuration={6000}
+    >
+      <SnackbarContent
+        className={classes[type]}
+        message={(
+          <span className={classes.message}>
+            <Icon className={classes.icon} />
+            {message}
+          </span>
+)}
+        action={[
+          <IconButton key="close" aria-label="Close" color="inherit" onClick={handleClose}>
+            <CloseIcon className={classes.closeIcon} />
+          </IconButton>,
+        ]}
+      />
+    </Snackbar>
+  );
 }
+
+SnackbarWrapper.propTypes = {
+  classes: PropTypes.shape({
+    message: PropTypes.shape({}).isRequired,
+    icon: PropTypes.shape({}).isRequired,
+    closeIcon: PropTypes.shape({}).isRequired,
+  }).isRequired,
+  type: PropTypes.string,
+  message: PropTypes.string.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+};
+
+SnackbarWrapper.defaultProps = {
+  type: 'success',
+};
 
 export default withStyles(styles)(SnackbarWrapper);

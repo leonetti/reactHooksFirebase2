@@ -1,4 +1,4 @@
-import app from 'firebase/app'
+import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 
@@ -32,26 +32,33 @@ class Firebase {
     await this.auth.createUserWithEmailAndPassword(email, password);
     return this.auth.currentUser.updateProfile({
       displayName: name,
-    })
+    });
   }
 
   // TESTING PURPOSES
   addQuote(quote) {
-    if(!this.auth.currentUser) {
-      return alert('Not Authorized');
+    const user = this.auth.currentUser;
+
+    if (!user) {
+      return {
+        success: false,
+        error: {
+          message: 'Not Authorized',
+        },
+      };
     }
 
-    const uid = this.auth.currentUser.uid;
+    const { uid } = user;
 
-    this.db.ref(`users/${uid}`).set({
-      quote
-    })
+    return this.db.ref(`users/${uid}`).set({
+      quote,
+    });
   }
 
   isInitialized() {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.auth.onAuthStateChanged(resolve);
-    })
+    });
   }
 
   getCurrentUser() {
@@ -59,11 +66,9 @@ class Firebase {
   }
 
   async getCurrentUserQuote() {
-    const uid = this.auth.currentUser.uid;
+    const { uid } = this.auth.currentUser;
 
-    const quote = await this.db.ref(`users/${uid}`).once('value').then((snapshot) => {
-      return (snapshot.val() && snapshot.val().quote) || 'NO QUOTE';
-    })
+    const quote = await this.db.ref(`users/${uid}`).once('value').then(snapshot => (snapshot.val() && snapshot.val().quote) || 'NO QUOTE');
 
     return quote;
   }
@@ -86,6 +91,7 @@ class Firebase {
 
   // *** User API ***
   user = uid => this.db.ref(`users/${uid}`);
+
   users = () => this.db.ref('users');
 }
 
