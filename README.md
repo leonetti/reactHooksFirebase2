@@ -5,7 +5,7 @@ Will need environment variables to get up and running with Firebase
 Uses Firebase for Authentication
 Uses React Router for routing and protecting routes
 Uses Material UI Core/Icons for styling
-
+Uses SASS
 
 ## Available Scripts
 

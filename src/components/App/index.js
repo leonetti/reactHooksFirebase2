@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import './styles.css'
+import './styles.scss'
 import HomePage from '../HomePage'
 import Login from '../Login'
 import Register from '../Register'
@@ -36,5 +36,5 @@ export default function App() {
         </Switch>
       </Router>
     </MuiThemeProvider>
-  ) : <div id="loader"><CircularProgress /></div>
+  ) : <div id="pageLoader"><CircularProgress /></div>
 }
